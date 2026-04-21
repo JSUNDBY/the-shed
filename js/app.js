@@ -23,15 +23,20 @@
 
     // --- Home --------------------------------------------------------------
     function renderHome() {
+        // Single client — skip index, go straight to the project.
+        if (SHED.projects.length === 1) {
+            window.location.hash = `#/project/${SHED.projects[0].id}`;
+            return;
+        }
+
         document.title = `The Shed — ${SHED.config.studioName}`;
         const app = document.getElementById('app');
         app.innerHTML = `
             <section class="home-intro">
-                <div class="home-intro-label">Work in progress</div>
-                <h1 class="home-intro-title">Quiet rooms for <em>unfinished</em> work.</h1>
+                <div class="home-intro-label">Visual Review</div>
+                <h1 class="home-intro-title">The <em>Shed</em></h1>
                 <p class="home-intro-lede">
-                    A private space where visuals live before they're ready for the world.
-                    Quarterly updates, open to review. Signed, Josh.
+                    Select a project to review.
                 </p>
             </section>
             <section class="project-list">
@@ -63,7 +68,7 @@
         document.title = `${project.name} — The Shed`;
         const app = document.getElementById('app');
         app.innerHTML = `
-            <a class="back-link" href="#/">&larr; Index</a>
+            ${SHED.projects.length > 1 ? '<a class="back-link" href="#/">&larr; Index</a>' : ''}
             <section class="project-hero">
                 <div class="project-hero-label">Project &bull; ${esc(project.client || 'Client')}</div>
                 <h1>${formatTitle(project.name)}</h1>
