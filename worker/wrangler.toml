@@ -1,0 +1,13 @@
+name = "the-shed-ratings"
+main = "worker.js"
+compatibility_date = "2025-04-01"
+
+# Create the KV namespace first with:
+#   npx wrangler kv:namespace create RATINGS_KV
+# Then paste the returned id below (replace the placeholder).
+[[kv_namespaces]]
+binding = "RATINGS_KV"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+[vars]
+ALLOWED_ORIGIN = "https://the-shed.joshsundby.com"
