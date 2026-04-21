@@ -107,9 +107,14 @@ window.Feedback = (function () {
 
         nameEl.addEventListener('input', () => updateSubmitState(card));
 
-        // Initial fetch
+        // Initial fetch — restore button state from most recent feedback
         fetchFeedback(projectId, quarterId, imageId).then(data => {
             renderHistory(card, data.entries);
+            if (data.entries && data.entries.length > 0) {
+                const latest = data.entries[data.entries.length - 1];
+                decision = latest.decision;
+                decisionBtns.forEach(b => b.classList.toggle('active', b.dataset.value === decision));
+            }
         });
 
         submitEl.addEventListener('click', async () => {
