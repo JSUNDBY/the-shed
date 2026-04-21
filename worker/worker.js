@@ -16,8 +16,8 @@ function corsHeaders(env) {
     const origin = env.ALLOWED_ORIGIN || DEFAULT_ORIGIN;
     return {
         'Access-Control-Allow-Origin': origin,
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Key',
         'Access-Control-Max-Age': '86400',
     };
 }
@@ -131,6 +131,23 @@ export default {
             await env.RATINGS_KV.put(rlKey, '1', { expirationTtl: 10 });
 
             return json({ ok: true }, 200, env);
+        }
+
+        // DELETE /feedback/:projectId/:quarterId/:imageId — admin reset
+        const delMatch = url.pathname.match(/^\/feedback\/([^\/]+)\/([^\/]+)\/([^\/]+)\/?$/);
+        if (request.method === 'DELETE' && delMatch) {
+            const secret = request.headers.get('X-Admin-Key');
+            if (!secret || secret !== (env.ADMIN_KEY || '')) {
+                return json({ error: 'unauthorized' }, 401, env);
+            }
+            const projectId = decodeURIComponent(delMatch[1]);
+            const quarterId = decodeURIComponent(delMatch[2]);
+            const imageId = decodeURIComponent(delMatch[3]);
+            if (!validId(projectId) || !validId(quarterId) || !validId(imageId)) {
+                return json({ error: 'invalid_id' }, 400, env);
+            }
+            await env.RATINGS_KV.delete(keyFor(projectId, quarterId, imageId));
+            return json({ ok: true, cleared: `${projectId}/${quarterId}/${imageId}` }, 200, env);
         }
 
         return json({ error: 'not_found' }, 404, env);
