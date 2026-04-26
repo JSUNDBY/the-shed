@@ -92,6 +92,12 @@ SHED.projects = [
                         filename: 'q1-2026-spring/11-aurora-borealis.png',
                         notes: 'Green and crimson aurora ribbons dancing across the sky. High-energy, bold color.',
                     },
+                    {
+                        id: 'evening-dunes',
+                        title: 'Evening Dunes',
+                        filename: 'q1-2026-spring/12-evening-dunes.png',
+                        notes: 'Moonlit dunes and beach grasses under a starlit sky. Wide horizon, soft and quiet.',
+                    },
                 ],
             },
         ],
